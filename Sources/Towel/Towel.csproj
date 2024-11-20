@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<DocumentationFile>Towel.xml</DocumentationFile>
+		<PackageId>Towel</PackageId>
+		<PackageIcon>icon.png</PackageIcon>
+		<Authors>Zachary Patten</Authors>
+		<Description>A .NET library intended to make coding a bit more towelerable: data structures, algorithms, mathematics, metadata, extensions, console, and more. :)</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageTags>Towel, library, framework, algorithms, data-structures, mathematics, extensions</PackageTags>
+		<PackageProjectUrl></PackageProjectUrl>
+		<Copyright>Copyright (c) 2020 Zachary Patten</Copyright>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/ZacharyPatten/Towel</RepositoryUrl>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
+</Project>

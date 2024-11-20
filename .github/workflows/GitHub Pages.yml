@@ -1,0 +1,66 @@
+name: GitHub Pages
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Sources/Towel/**'
+      - 'Tools/docfx_project/**'
+      - 'Tools/Towel_Testing/**'
+jobs:
+  documentation:
+    if: ${{ github.repository == 'ZacharyPatten/Towel' }}
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: setup dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: dotnet test
+      run: dotnet test --collect:"XPlat Code Coverage" /nowarn:cs1030
+    - name: find coverage.cobertura.xml path
+      run: find . -print | grep -i 'coverage.cobertura.xml' > COVERAGEPATH.txt
+    - name: move coverage.cobertura.xml file
+      run: |
+        COVERAGEPATH=$(<COVERAGEPATH.txt)
+        mv $COVERAGEPATH coverage.cobertura.xml
+    - name: dotnet tool install reportgenerator
+      run: dotnet tool install -g dotnet-reportgenerator-globaltool --version 4.8.11
+    - uses: nikeee/docfx-action@v1.0.0
+      name: docfx
+      with:
+        args: Tools/docfx_project/docfx.json
+    - name: chmod
+      run: sudo chmod -R 777 Tools/docfx_project/_site
+    - name: docfx bug workaround
+      run: |
+        sed -i -r 's/api\/[A-Za-z ]+\.[A-Za-z]+/api\/index\.html/' Tools/docfx_project/_site/toc.html
+        sed -i -r 's/name=""/name="api\/toc\.html"/' Tools/docfx_project/_site/toc.html
+    - name: make coverage report directory
+      run: mkdir Tools/docfx_project/_site/coveragereport
+    - name: generate coverage report
+      run: reportgenerator "-reports:coverage.cobertura.xml" "-targetdir:Tools/docfx_project/_site/coveragereport" -reporttypes:Html
+    - name: coverage.xml
+      run: |
+        grep -o -E -m 1 'line-rate=\"[.0-9]+\"' coverage.cobertura.xml | head -1 > line-rate.txt
+        grep -o -E -m 1 '[.0-9]{1,6}' line-rate.txt | head -1 > line-rate2.txt
+        LINERATE=$(<line-rate2.txt)
+        echo "$LINERATE * 100" | bc > line-percentage.txt
+        grep -o -E -m 1 '[0-9]+.[0-9]{0,2}' line-percentage.txt | head -1 > line-percentage2.txt
+        LINEPERCENTAGE=$(<line-percentage2.txt)
+        echo '<?xml version="1.0" encoding="utf-8"?>' > coverage.xml
+        echo '<coverage line-rate-percentage="'$LINEPERCENTAGE'%" />' >> coverage.xml
+    - name: move coverage.xml
+      run: mv coverage.xml Tools/docfx_project/_site/coveragereport/coverage.xml
+    - name: deploy to github-pages branch
+      run: |
+        cd Tools/docfx_project/_site
+        echo "* @ZacharyPatten" > CODEOWNERS
+        git init --initial-branch=github-pages
+        git config user.name "${GITHUB_ACTOR}"
+        git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+        git add .
+        git commit -m 'deploy to github-pages branch'
+        git push --force "https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" github-pages:github-pages

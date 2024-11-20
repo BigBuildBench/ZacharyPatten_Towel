@@ -1,0 +1,34 @@
+name: Continuous Integration
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '.vscode/**'
+      - '.github/**'
+      - 'License.md'
+      - 'README.md'
+      - 'Tools/docfx_project/**'
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - '.vscode/**'
+      - '.github/**'
+      - 'License.md'
+      - 'README.md'
+      - 'Tools/docfx_project/**'
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: setup dotnet
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: dotnet build
+      run: dotnet build --configuration Release /nowarn:cs1030
+    - name: dotnet test
+      run: dotnet test --configuration Release /nowarn:cs1030

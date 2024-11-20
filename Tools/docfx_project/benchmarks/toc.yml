@@ -1,0 +1,30 @@
+- name: Introduction
+  href: index.md
+- name: Sorting Algorithms
+  href: SortBenchmarks.md
+- name: Data Structures
+  href: DataStructuresBenchmarks.md
+- name: Weighted Random
+  href: WeightedRandomBenchmarks.md
+- name: decimal To English Words
+  href: ToEnglishWordsBenchmarks.md
+- name: Permute
+  href: PermuteBenchmarks.md
+- name: Map vs Dictionary (Add)
+  href: MapVsDictionaryAddBenchmarks.md
+- name: Map vs Dictionary (Look Up)
+  href: MapVsDictionaryLookUpBenchmarks.md
+- name: Span vs Array Sorting
+  href: SpanVsArraySortingBenchmarks.md
+- name: Random With Exclusions
+  href: RandomWithExclusionsBenchmarks.md
+- name: Heap Generics Vs Delegates
+  href: HeapGenericsVsDelegatesBenchmarks.md
+- name: Lazy Initialization
+  href: LazyInitializationBenchmarks.md
+- name: Lazy Caching
+  href: LazyCachingBenchmarks.md
+- name: Lazy Construction
+  href: LazyConstructionBenchmarks.md
+- name: Source
+  href: SourceOfBenchmarks.md
